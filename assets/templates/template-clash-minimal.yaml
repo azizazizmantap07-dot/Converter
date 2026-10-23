@@ -1,0 +1,55 @@
+mixed-port: 7892
+allow-lan: false
+mode: rule
+log-level: info
+ipv6: false
+external-controller: 127.0.0.1:9090
+secret: ""
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: "off"
+geodata-mode: false
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+tun:
+  enable: false
+  stack: mixed
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  auto-route: true
+  auto-detect-interface: true
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  default-nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+
+proxies:
+
+proxy-groups:
+  - name: PILIH-PROXY
+    type: select
+    include-all-proxies: true
+    proxies:
+      - AUTO-TERCEPAT
+      - DIRECT
+  - name: AUTO-TERCEPAT
+    type: url-test
+    include-all-proxies: true
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+
+rules:
+  - MATCH,PILIH-PROXY

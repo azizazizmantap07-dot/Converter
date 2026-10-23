@@ -1,0 +1,698 @@
+port: 7890
+socks-port: 7891
+mixed-port: 7892
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+ipv6: false
+external-controller: 127.0.0.1:9090
+secret: ""
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: "off"
+keep-alive-interval: 30
+geodata-mode: false
+geo-auto-update: true
+geo-update-interval: 24
+geox-url:
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb"
+  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+tun:
+  enable: false
+  stack: mixed
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: false
+
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+    - "+.push.apple.com"
+    - "dlg.io.mi.com"
+    - "+.apple.com"
+
+dns:
+  enable: true
+  ipv6: false
+  cache-algorithm: arc
+  use-hosts: true
+  use-system-hosts: true
+  listen: 0.0.0.0:1053
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - "+.lan"
+    - "+.local"
+    - "+.localdomain"
+    - "+.localhost"
+    - "+.invalid"
+    - "+.home.arpa"
+    - "+.ntp.org"
+    - "ntp.*.com"
+    - "time.*.com"
+    - "time.*.apple.com"
+    - "time.android.com"
+    - "time.windows.com"
+    - "+.pool.ntp.org"
+    - "stun.*.*"
+    - "stun.*.*.*"
+    - "+.stun.*.*"
+    - "+.stun.*.*.*"
+    - "+.srv.nintendo.net"
+    - "+.stun.playstation.net"
+    - "xbox.*.microsoft.com"
+    - "+.xboxlive.com"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "captive.apple.com"
+    - "connectivitycheck.gstatic.com"
+    - "connectivitycheck.android.com"
+    - "detectportal.firefox.com"
+    - "lens.l.google.com"
+    - "localhost.ptlogin2.qq.com"
+  # bootstrap: harus IP biasa (untuk me-resolve DoH/DoT dan server proxy)
+  default-nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+    - 9.9.9.9
+  # DNS utama (DoH, kebal terhadap pembajakan DNS ISP / Internet Positif)
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  # DNS untuk me-resolve domain server proxy
+  proxy-server-nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  # Kebijakan DNS per kategori (membutuhkan rule-providers di bawah)
+  nameserver-policy:
+    "rule-set:gs-category-ads-all": "rcode://success"
+    "rule-set:gs-openai": "https://1.1.1.1/dns-query#AI-CHATGPT"
+    "rule-set:gs-category-ai-not-cn": "https://1.1.1.1/dns-query#AI-CHATGPT"
+    "rule-set:gs-telegram": "https://1.1.1.1/dns-query#TELEGRAM"
+    "rule-set:gs-netflix": "https://1.1.1.1/dns-query#NETFLIX"
+    "rule-set:gs-youtube": "https://1.1.1.1/dns-query#YOUTUBE"
+  # Fallback bertingkat (dipakai jika hasil nameserver terindikasi terpolusi)
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://dns.quad9.net/dns-query
+    - https://dns.adguard-dns.com/dns-query
+    - tls://dns.google:853
+  fallback-filter:
+    geoip: true
+    geoip-code: ID
+    geosite:
+      - gfw
+    ipcidr:
+      - 240.0.0.0/4
+      - 0.0.0.0/8
+      - 127.0.0.0/8
+    domain:
+      - "+.google.com"
+      - "+.facebook.com"
+      - "+.youtube.com"
+      - "+.githubusercontent.com"
+      - "+.googlevideo.com"
+      - "+.telegram.org"
+
+proxies:
+
+proxy-groups:
+  # ---- Group utama ----
+  - name: PILIH-PROXY
+    type: select
+    include-all-proxies: true
+    exclude-filter: '(?i)traffic|expire|remaining|reset|website|sisa|kadaluarsa|官网|剩余|到期|流量|套餐|订阅'
+    proxies:
+      - "AUTO-TERCEPAT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+      - "DIRECT"
+
+  - name: AUTO-TERCEPAT
+    type: url-test
+    include-all-proxies: true
+    exclude-filter: '(?i)traffic|expire|remaining|reset|website|sisa|kadaluarsa|官网|剩余|到期|流量|套餐|订阅'
+    url: https://cp.cloudflare.com/generate_204
+    interval: 180
+    tolerance: 30
+    lazy: true
+
+  - name: PROXY-FAILOVER
+    type: fallback
+    include-all-proxies: true
+    exclude-filter: '(?i)traffic|expire|remaining|reset|website|sisa|kadaluarsa|官网|剩余|到期|流量|套餐|订阅'
+    url: https://cp.cloudflare.com/generate_204
+    interval: 200
+    lazy: true
+
+  - name: PROXY-LOADBALANCE
+    type: load-balance
+    strategy: consistent-hashing
+    include-all-proxies: true
+    exclude-filter: '(?i)traffic|expire|remaining|reset|website|sisa|kadaluarsa|官网|剩余|到期|流量|套餐|订阅'
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    lazy: true
+
+  # ---- Group layanan ----
+  - name: ADBLOCK
+    type: select
+    proxies:
+      - "REJECT"
+      - "REJECT-DROP"
+      - "DIRECT"
+      - "PILIH-PROXY"
+
+  - name: AI-CHATGPT
+    type: select
+    proxies:
+      - "AUTO-TERCEPAT"
+      - "PROXY-FAILOVER"
+      - "PILIH-PROXY"
+      - "PROXY-LOADBALANCE"
+      - "DIRECT"
+
+  - name: TELEGRAM
+    type: select
+    proxies:
+      - "PILIH-PROXY"
+      - "AUTO-TERCEPAT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+      - "DIRECT"
+
+  - name: MESSENGER
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+      - "AUTO-TERCEPAT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+  - name: TIKTOK-SOSMED
+    type: select
+    proxies:
+      - "AUTO-TERCEPAT"
+      - "PILIH-PROXY"
+      - "DIRECT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+  - name: YOUTUBE
+    type: select
+    proxies:
+      - "AUTO-TERCEPAT"
+      - "PILIH-PROXY"
+      - "DIRECT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+  - name: NETFLIX
+    type: select
+    proxies:
+      - "PILIH-PROXY"
+      - "AUTO-TERCEPAT"
+      - "PROXY-LOADBALANCE"
+      - "PROXY-FAILOVER"
+      - "DIRECT"
+
+  - name: STREAMING
+    type: select
+    proxies:
+      - "PROXY-LOADBALANCE"
+      - "AUTO-TERCEPAT"
+      - "PILIH-PROXY"
+      - "DIRECT"
+      - "PROXY-FAILOVER"
+  - name: STREAMING-LOKAL
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+
+  - name: MUSIC
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+      - "AUTO-TERCEPAT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+  - name: GAME
+    type: select
+    proxies:
+      - "DIRECT"
+      - "AUTO-TERCEPAT"
+      - "PILIH-PROXY"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+  - name: CRYPTO-PAYMENT
+    type: select
+    proxies:
+      - "PILIH-PROXY"
+      - "AUTO-TERCEPAT"
+      - "DIRECT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+  - name: DEVELOPER
+    type: select
+    proxies:
+      - "PILIH-PROXY"
+      - "DIRECT"
+      - "AUTO-TERCEPAT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+  - name: GOOGLE
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+      - "AUTO-TERCEPAT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+  - name: MICROSOFT
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+      - "AUTO-TERCEPAT"
+
+  - name: APPLE
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+
+  - name: SPEEDTEST
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+
+  - name: DOWNLOAD-TORRENT
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+
+  - name: FINANSIAL-BANK
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+
+  - name: E-COMMERCE
+    type: select
+    proxies:
+      - "DIRECT"
+      - "PILIH-PROXY"
+
+  - name: LAINNYA
+    type: select
+    proxies:
+      - "PILIH-PROXY"
+      - "DIRECT"
+      - "AUTO-TERCEPAT"
+      - "PROXY-FAILOVER"
+      - "PROXY-LOADBALANCE"
+
+rule-providers:
+  gs-category-ads-all: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-category-ads-all.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs"}
+  gs-cn: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-cn.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
+  gs-category-pt: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-category-pt.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-pt.mrs"}
+  gs-openai: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-openai.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs"}
+  gs-category-ai-not-cn: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-category-ai-not-cn.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-%21cn.mrs"}
+  gs-telegram: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-telegram.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"}
+  gs-whatsapp: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-whatsapp.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/whatsapp.mrs"}
+  gs-signal: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-signal.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/signal.mrs"}
+  gs-line: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-line.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/line.mrs"}
+  gs-discord: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-discord.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/discord.mrs"}
+  gs-zoom: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-zoom.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/zoom.mrs"}
+  gs-slack: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-slack.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/slack.mrs"}
+  gs-youtube: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-youtube.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
+  gs-netflix: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-netflix.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"}
+  gs-disney: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-disney.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/disney.mrs"}
+  gs-hbo: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-hbo.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hbo.mrs"}
+  gs-primevideo: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-primevideo.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/primevideo.mrs"}
+  gs-hulu: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-hulu.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hulu.mrs"}
+  gs-twitch: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-twitch.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitch.mrs"}
+  gs-spotify: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-spotify.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs"}
+  gs-soundcloud: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-soundcloud.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/soundcloud.mrs"}
+  gs-deezer: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-deezer.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/deezer.mrs"}
+  gs-tidal: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-tidal.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tidal.mrs"}
+  gs-tiktok: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-tiktok.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"}
+  gs-facebook: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-facebook.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/facebook.mrs"}
+  gs-instagram: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-instagram.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/instagram.mrs"}
+  gs-twitter: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-twitter.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitter.mrs"}
+  gs-reddit: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-reddit.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/reddit.mrs"}
+  gs-pinterest: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-pinterest.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/pinterest.mrs"}
+  gs-linkedin: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-linkedin.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/linkedin.mrs"}
+  gs-category-social-media-not-cn: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-category-social-media-not-cn.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-social-media-%21cn.mrs"}
+  gs-steam: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-steam.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"}
+  gs-epicgames: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-epicgames.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/epicgames.mrs"}
+  gs-ea: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-ea.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ea.mrs"}
+  gs-ubisoft: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-ubisoft.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft.mrs"}
+  gs-blizzard: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-blizzard.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/blizzard.mrs"}
+  gs-riot: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-riot.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/riot.mrs"}
+  gs-xbox: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-xbox.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/xbox.mrs"}
+  gs-playstation: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-playstation.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/playstation.mrs"}
+  gs-nintendo: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-nintendo.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/nintendo.mrs"}
+  gs-category-games: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-category-games.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games.mrs"}
+  gs-paypal: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-paypal.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs"}
+  gs-binance: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-binance.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/binance.mrs"}
+  gs-github: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-github.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
+  gs-gitlab: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-gitlab.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gitlab.mrs"}
+  gs-docker: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-docker.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/docker.mrs"}
+  gs-jetbrains: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-jetbrains.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/jetbrains.mrs"}
+  gs-speedtest: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-speedtest.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/speedtest.mrs"}
+  gs-microsoft: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-microsoft.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
+  gs-apple: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-apple.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"}
+  gs-google: {type: http, behavior: domain, format: mrs, interval: 86400, path: ./ruleset/gs-google.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
+  gi-private: {type: http, behavior: ipcidr, format: mrs, interval: 86400, path: ./ruleset/gi-private.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"}
+  gi-cn: {type: http, behavior: ipcidr, format: mrs, interval: 86400, path: ./ruleset/gi-cn.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
+  gi-id: {type: http, behavior: ipcidr, format: mrs, interval: 86400, path: ./ruleset/gi-id.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/id.mrs"}
+  gi-telegram: {type: http, behavior: ipcidr, format: mrs, interval: 86400, path: ./ruleset/gi-telegram.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
+  gi-netflix: {type: http, behavior: ipcidr, format: mrs, interval: 86400, path: ./ruleset/gi-netflix.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+  gi-facebook: {type: http, behavior: ipcidr, format: mrs, interval: 86400, path: ./ruleset/gi-facebook.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/facebook.mrs"}
+  gi-twitter: {type: http, behavior: ipcidr, format: mrs, interval: 86400, path: ./ruleset/gi-twitter.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs"}
+  gi-google: {type: http, behavior: ipcidr, format: mrs, interval: 86400, path: ./ruleset/gi-google.mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+
+rules:
+  # 1. Jaringan lokal, NTP & captive portal
+  - RULE-SET,gi-private,DIRECT,no-resolve
+  - DOMAIN-SUFFIX,lan,DIRECT
+  - DOMAIN-SUFFIX,local,DIRECT
+  - DOMAIN-SUFFIX,localhost,DIRECT
+  - DOMAIN-SUFFIX,ntp.org,DIRECT
+  - DOMAIN-SUFFIX,pool.ntp.org,DIRECT
+  - DOMAIN-SUFFIX,time.android.com,DIRECT
+  - DOMAIN-SUFFIX,time.windows.com,DIRECT
+  - DOMAIN-SUFFIX,time.apple.com,DIRECT
+  - DOMAIN-SUFFIX,time.cloudflare.com,DIRECT
+  - DOMAIN-SUFFIX,connectivitycheck.gstatic.com,DIRECT
+  - DOMAIN-SUFFIX,connectivitycheck.android.com,DIRECT
+  - DOMAIN-SUFFIX,captive.apple.com,DIRECT
+  - DOMAIN-SUFFIX,msftconnecttest.com,DIRECT
+  - DOMAIN-SUFFIX,msftncsi.com,DIRECT
+  - DOMAIN-SUFFIX,detectportal.firefox.com,DIRECT
+  - DST-PORT,123,DIRECT
+  # 2. Pemblokir iklan
+  - RULE-SET,gs-category-ads-all,ADBLOCK
+  # (opsional) paksa QUIC/HTTP3 turun ke TCP bila YouTube/Google lambat lewat proxy:
+  # - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
+  # --- FINANSIAL-BANK ---
+  - DOMAIN-SUFFIX,klikbca.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,bca.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,blubybcadigital.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,bri.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,bankmandiri.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,bni.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,btn.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,cimbniaga.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,cimbclicks.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,permatabank.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,permatabank.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,danamon.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,ocbc.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,ocbcnisp.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,maybank.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,panin.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,bankbsi.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,bsi.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,jago.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,seabank.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,allobank.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,jenius.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,btpn.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,dana.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,ovo.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,gopay.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,linkaja.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,shopeepay.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,midtrans.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,xendit.co,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,doku.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,ipaymu.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,faspay.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,flip.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,kredivo.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,akulaku.com,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,homecredit.co.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,ojk.go.id,FINANSIAL-BANK
+  - DOMAIN-SUFFIX,bi.go.id,FINANSIAL-BANK
+  # --- E-COMMERCE ---
+  - DOMAIN-SUFFIX,tokopedia.com,E-COMMERCE
+  - DOMAIN-SUFFIX,tokopedia.net,E-COMMERCE
+  - DOMAIN-SUFFIX,tokopedia.link,E-COMMERCE
+  - DOMAIN-SUFFIX,shopee.co.id,E-COMMERCE
+  - DOMAIN-SUFFIX,shopee.com,E-COMMERCE
+  - DOMAIN-SUFFIX,shopeemobile.com,E-COMMERCE
+  - DOMAIN-SUFFIX,shp.ee,E-COMMERCE
+  - DOMAIN-SUFFIX,susercontent.com,E-COMMERCE
+  - DOMAIN-SUFFIX,lazada.co.id,E-COMMERCE
+  - DOMAIN-SUFFIX,lazada.com,E-COMMERCE
+  - DOMAIN-SUFFIX,lzd.co,E-COMMERCE
+  - DOMAIN-SUFFIX,bukalapak.com,E-COMMERCE
+  - DOMAIN-SUFFIX,blibli.com,E-COMMERCE
+  - DOMAIN-SUFFIX,tiket.com,E-COMMERCE
+  - DOMAIN-SUFFIX,traveloka.com,E-COMMERCE
+  - DOMAIN-SUFFIX,zalora.co.id,E-COMMERCE
+  - DOMAIN-SUFFIX,jd.id,E-COMMERCE
+  - DOMAIN-SUFFIX,olx.co.id,E-COMMERCE
+  - DOMAIN-SUFFIX,sociolla.com,E-COMMERCE
+  - DOMAIN-SUFFIX,orami.co.id,E-COMMERCE
+  - DOMAIN-SUFFIX,gojek.com,E-COMMERCE
+  - DOMAIN-SUFFIX,gojekapi.com,E-COMMERCE
+  - DOMAIN-SUFFIX,grab.com,E-COMMERCE
+  - DOMAIN-SUFFIX,grabtaxi.com,E-COMMERCE
+  - DOMAIN-SUFFIX,aliexpress.com,E-COMMERCE
+  - DOMAIN-SUFFIX,alicdn.com,E-COMMERCE
+  - DOMAIN-SUFFIX,temu.com,E-COMMERCE
+  - DOMAIN-SUFFIX,shein.com,E-COMMERCE
+  - DOMAIN-SUFFIX,ebay.com,E-COMMERCE
+  # --- STREAMING-LOKAL ---
+  - DOMAIN-SUFFIX,vidio.com,STREAMING-LOKAL
+  - DOMAIN-SUFFIX,mola.tv,STREAMING-LOKAL
+  - DOMAIN-SUFFIX,rctiplus.com,STREAMING-LOKAL
+  - DOMAIN-SUFFIX,rctiplus.id,STREAMING-LOKAL
+  - DOMAIN-SUFFIX,wetv.vip,STREAMING-LOKAL
+  - DOMAIN-SUFFIX,catchplay.com,STREAMING-LOKAL
+  - DOMAIN-SUFFIX,genflix.co.id,STREAMING-LOKAL
+  - DOMAIN-SUFFIX,visionplus.id,STREAMING-LOKAL
+  - DOMAIN-SUFFIX,maxstream.tv,STREAMING-LOKAL
+  # --- DOWNLOAD-TORRENT ---
+  - DOMAIN-KEYWORD,torrent,DOWNLOAD-TORRENT
+  - DOMAIN-KEYWORD,bittorrent,DOWNLOAD-TORRENT
+  - DOMAIN-KEYWORD,tracker,DOWNLOAD-TORRENT
+  - RULE-SET,gs-category-pt,DOWNLOAD-TORRENT
+  # --- AI-CHATGPT ---
+  - DOMAIN-SUFFIX,claude.ai,AI-CHATGPT
+  - DOMAIN-SUFFIX,anthropic.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,claude.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,perplexity.ai,AI-CHATGPT
+  - DOMAIN-SUFFIX,gemini.google.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,aistudio.google.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,bard.google.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,generativelanguage.googleapis.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,notebooklm.google,AI-CHATGPT
+  - DOMAIN-SUFFIX,copilot.microsoft.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,x.ai,AI-CHATGPT
+  - DOMAIN-SUFFIX,grok.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,poe.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,huggingface.co,AI-CHATGPT
+  - DOMAIN-SUFFIX,midjourney.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,civitai.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,character.ai,AI-CHATGPT
+  - DOMAIN-SUFFIX,mistral.ai,AI-CHATGPT
+  - DOMAIN-SUFFIX,cursor.sh,AI-CHATGPT
+  - DOMAIN-SUFFIX,cursor.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,githubcopilot.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,openrouter.ai,AI-CHATGPT
+  - DOMAIN-SUFFIX,groq.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,stability.ai,AI-CHATGPT
+  - DOMAIN-SUFFIX,runwayml.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,elevenlabs.io,AI-CHATGPT
+  - DOMAIN-SUFFIX,suno.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,you.com,AI-CHATGPT
+  - DOMAIN-SUFFIX,jasper.ai,AI-CHATGPT
+  - RULE-SET,gs-openai,AI-CHATGPT
+  - RULE-SET,gs-category-ai-not-cn,AI-CHATGPT
+  # --- TELEGRAM ---
+  - DOMAIN-SUFFIX,t.me,TELEGRAM
+  - DOMAIN-SUFFIX,telegram.org,TELEGRAM
+  - DOMAIN-SUFFIX,telegram.me,TELEGRAM
+  - DOMAIN-SUFFIX,tdesktop.com,TELEGRAM
+  - DOMAIN-SUFFIX,telegra.ph,TELEGRAM
+  - DOMAIN-SUFFIX,telesco.pe,TELEGRAM
+  - DOMAIN-SUFFIX,cdn-telegram.org,TELEGRAM
+  - RULE-SET,gs-telegram,TELEGRAM
+  - RULE-SET,gi-telegram,TELEGRAM,no-resolve
+  # --- MESSENGER ---
+  - RULE-SET,gs-whatsapp,MESSENGER
+  - RULE-SET,gs-signal,MESSENGER
+  - RULE-SET,gs-line,MESSENGER
+  - RULE-SET,gs-discord,MESSENGER
+  - RULE-SET,gs-zoom,MESSENGER
+  - RULE-SET,gs-slack,MESSENGER
+  # --- YOUTUBE ---
+  - RULE-SET,gs-youtube,YOUTUBE
+  # --- NETFLIX ---
+  - RULE-SET,gs-netflix,NETFLIX
+  - RULE-SET,gi-netflix,NETFLIX,no-resolve
+  # --- STREAMING ---
+  - DOMAIN-SUFFIX,viu.com,STREAMING
+  - DOMAIN-SUFFIX,iq.com,STREAMING
+  - DOMAIN-SUFFIX,hotstar.com,STREAMING
+  - DOMAIN-SUFFIX,crunchyroll.com,STREAMING
+  - DOMAIN-SUFFIX,dazn.com,STREAMING
+  - DOMAIN-SUFFIX,peacocktv.com,STREAMING
+  - DOMAIN-SUFFIX,paramountplus.com,STREAMING
+  - DOMAIN-SUFFIX,max.com,STREAMING
+  - DOMAIN-SUFFIX,mubi.com,STREAMING
+  - DOMAIN-SUFFIX,plex.tv,STREAMING
+  - DOMAIN-SUFFIX,vimeo.com,STREAMING
+  - DOMAIN-SUFFIX,dailymotion.com,STREAMING
+  - DOMAIN-SUFFIX,bilibili.tv,STREAMING
+  - RULE-SET,gs-disney,STREAMING
+  - RULE-SET,gs-hbo,STREAMING
+  - RULE-SET,gs-primevideo,STREAMING
+  - RULE-SET,gs-hulu,STREAMING
+  - RULE-SET,gs-twitch,STREAMING
+  # --- MUSIC ---
+  - DOMAIN-SUFFIX,joox.com,MUSIC
+  - DOMAIN-SUFFIX,last.fm,MUSIC
+  - DOMAIN-SUFFIX,bandcamp.com,MUSIC
+  - DOMAIN-SUFFIX,audiomack.com,MUSIC
+  - RULE-SET,gs-spotify,MUSIC
+  - RULE-SET,gs-soundcloud,MUSIC
+  - RULE-SET,gs-deezer,MUSIC
+  - RULE-SET,gs-tidal,MUSIC
+  # --- TIKTOK-SOSMED ---
+  - RULE-SET,gs-tiktok,TIKTOK-SOSMED
+  - RULE-SET,gs-facebook,TIKTOK-SOSMED
+  - RULE-SET,gs-instagram,TIKTOK-SOSMED
+  - RULE-SET,gs-twitter,TIKTOK-SOSMED
+  - RULE-SET,gs-reddit,TIKTOK-SOSMED
+  - RULE-SET,gs-pinterest,TIKTOK-SOSMED
+  - RULE-SET,gs-linkedin,TIKTOK-SOSMED
+  - RULE-SET,gs-category-social-media-not-cn,TIKTOK-SOSMED
+  - RULE-SET,gi-facebook,TIKTOK-SOSMED,no-resolve
+  - RULE-SET,gi-twitter,TIKTOK-SOSMED,no-resolve
+  # --- GAME ---
+  - DOMAIN-SUFFIX,mobilelegends.com,GAME
+  - DOMAIN-SUFFIX,moonton.com,GAME
+  - DOMAIN-SUFFIX,garena.com,GAME
+  - DOMAIN-SUFFIX,garena.co.id,GAME
+  - DOMAIN-SUFFIX,freefiremobile.com,GAME
+  - DOMAIN-SUFFIX,pubgmobile.com,GAME
+  - DOMAIN-SUFFIX,proximabeta.com,GAME
+  - DOMAIN-SUFFIX,igamecj.com,GAME
+  - DOMAIN-SUFFIX,krafton.com,GAME
+  - DOMAIN-SUFFIX,hoyoverse.com,GAME
+  - DOMAIN-SUFFIX,mihoyo.com,GAME
+  - DOMAIN-SUFFIX,supercell.com,GAME
+  - DOMAIN-SUFFIX,supercellid.com,GAME
+  - DOMAIN-SUFFIX,roblox.com,GAME
+  - DOMAIN-SUFFIX,rbxcdn.com,GAME
+  - DOMAIN-SUFFIX,minecraft.net,GAME
+  - DOMAIN-SUFFIX,mojang.com,GAME
+  - DOMAIN-SUFFIX,callofduty.com,GAME
+  - DOMAIN-SUFFIX,activision.com,GAME
+  - RULE-SET,gs-steam,GAME
+  - RULE-SET,gs-epicgames,GAME
+  - RULE-SET,gs-ea,GAME
+  - RULE-SET,gs-ubisoft,GAME
+  - RULE-SET,gs-blizzard,GAME
+  - RULE-SET,gs-riot,GAME
+  - RULE-SET,gs-xbox,GAME
+  - RULE-SET,gs-playstation,GAME
+  - RULE-SET,gs-nintendo,GAME
+  - RULE-SET,gs-category-games,GAME
+  # --- CRYPTO-PAYMENT ---
+  - DOMAIN-SUFFIX,okx.com,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,bybit.com,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,kucoin.com,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,gate.io,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,coingecko.com,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,coinmarketcap.com,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,stripe.com,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,wise.com,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,payoneer.com,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,etherscan.io,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,metamask.io,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,uniswap.org,CRYPTO-PAYMENT
+  - DOMAIN-SUFFIX,opensea.io,CRYPTO-PAYMENT
+  - RULE-SET,gs-paypal,CRYPTO-PAYMENT
+  - RULE-SET,gs-binance,CRYPTO-PAYMENT
+  # --- DEVELOPER ---
+  - DOMAIN-SUFFIX,npmjs.org,DEVELOPER
+  - DOMAIN-SUFFIX,npmjs.com,DEVELOPER
+  - DOMAIN-SUFFIX,pypi.org,DEVELOPER
+  - DOMAIN-SUFFIX,pythonhosted.org,DEVELOPER
+  - DOMAIN-SUFFIX,golang.org,DEVELOPER
+  - DOMAIN-SUFFIX,go.dev,DEVELOPER
+  - DOMAIN-SUFFIX,rust-lang.org,DEVELOPER
+  - DOMAIN-SUFFIX,crates.io,DEVELOPER
+  - DOMAIN-SUFFIX,maven.org,DEVELOPER
+  - DOMAIN-SUFFIX,gradle.org,DEVELOPER
+  - DOMAIN-SUFFIX,stackoverflow.com,DEVELOPER
+  - DOMAIN-SUFFIX,sstatic.net,DEVELOPER
+  - DOMAIN-SUFFIX,kotlinlang.org,DEVELOPER
+  - DOMAIN-SUFFIX,flutter.dev,DEVELOPER
+  - DOMAIN-SUFFIX,dart.dev,DEVELOPER
+  - DOMAIN-SUFFIX,pub.dev,DEVELOPER
+  - DOMAIN-SUFFIX,githubusercontent.com,DEVELOPER
+  - DOMAIN-SUFFIX,githubassets.com,DEVELOPER
+  - RULE-SET,gs-github,DEVELOPER
+  - RULE-SET,gs-gitlab,DEVELOPER
+  - RULE-SET,gs-docker,DEVELOPER
+  - RULE-SET,gs-jetbrains,DEVELOPER
+  # --- SPEEDTEST ---
+  - DOMAIN-SUFFIX,speedtest.net,SPEEDTEST
+  - DOMAIN-SUFFIX,ookla.com,SPEEDTEST
+  - DOMAIN-SUFFIX,fast.com,SPEEDTEST
+  - DOMAIN-SUFFIX,speed.cloudflare.com,SPEEDTEST
+  - RULE-SET,gs-speedtest,SPEEDTEST
+  # --- MICROSOFT ---
+  - RULE-SET,gs-microsoft,MICROSOFT
+  # --- APPLE ---
+  - RULE-SET,gs-apple,APPLE
+  # --- GOOGLE ---
+  - RULE-SET,gs-google,GOOGLE
+  - RULE-SET,gi-google,GOOGLE,no-resolve
+  # --- REGIONAL: INDONESIA & CHINA LANGSUNG ---
+  - DOMAIN-SUFFIX,id,DIRECT
+  - DOMAIN-SUFFIX,co.id,DIRECT
+  - DOMAIN-SUFFIX,go.id,DIRECT
+  - DOMAIN-SUFFIX,ac.id,DIRECT
+  - DOMAIN-SUFFIX,or.id,DIRECT
+  - DOMAIN-SUFFIX,sch.id,DIRECT
+  - DOMAIN-SUFFIX,web.id,DIRECT
+  - DOMAIN-SUFFIX,my.id,DIRECT
+  - DOMAIN-SUFFIX,biz.id,DIRECT
+  - RULE-SET,gs-cn,DIRECT
+  - RULE-SET,gi-id,DIRECT,no-resolve
+  - RULE-SET,gi-cn,DIRECT,no-resolve
+  # --- FALLBACK GLOBAL ---
+  - MATCH,LAINNYA
