@@ -1,0 +1,116 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.5"
+          channel: stable
+          cache: true
+
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      - name: Accept Android licenses
+        run: yes | flutter doctor --android-licenses || true
+
+      - name: Ensure platform scaffolding
+        run: |
+          # Generate missing Android files (icons, debug/profile manifests, wrapper jar, etc.).
+          # Existing files in the repo (lib/, android/app/build.gradle, ...) are NOT overwritten.
+          flutter create . --project-name proxy_converter --org com.proxyconverter --platforms=android
+          # flutter create adds a second MainActivity (package com.proxyconverter.proxy_converter);
+          # our real one lives in com.proxyconverter.app, so drop the stray copy.
+          rm -rf android/app/src/main/kotlin/com/proxyconverter/proxy_converter
+          # flutter create adds a default widget test that references a `MyApp` class we don't have.
+          rm -rf test
+          # AGP 8.7.0 (settings.gradle) needs Gradle >= 8.9; make sure the wrapper never falls back to 8.3.
+          sed -i -E 's#gradle-[0-9.]+-(all|bin)\.zip#gradle-8.9-all.zip#' android/gradle/wrapper/gradle-wrapper.properties
+          cat android/gradle/wrapper/gradle-wrapper.properties
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+        continue-on-error: true
+
+      - name: Prepare release signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > android/app/release.jks
+            {
+              printf 'storePassword=%s\n' "$KEYSTORE_PASSWORD"
+              printf 'keyPassword=%s\n' "$KEY_PASSWORD"
+              printf 'keyAlias=%s\n' "$KEY_ALIAS"
+              printf 'storeFile=release.jks\n'
+            } > android/key.properties
+            echo "Release keystore configured."
+          else
+            echo "::warning::KEYSTORE_BASE64 secret not set - falling back to debug signing."
+          fi
+
+      # Satu APK universal untuk ARM 32-bit (armeabi-v7a) + ARM 64-bit (arm64-v8a).
+      # x86 / x86_64 tidak disertakan agar ukuran lebih kecil (hampir semua HP Android = ARM).
+      - name: Build release APK (ARM only)
+        run: flutter build apk --release --target-platform android-arm,android-arm64
+
+      - name: Show APK signature
+        continue-on-error: true
+        run: |
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          "$APKSIGNER" verify --print-certs build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Package single APK
+        run: |
+          mkdir -p dist
+          # Hanya satu file dengan nama jelas
+          cp build/app/outputs/flutter-apk/app-release.apk dist/ProxyConverter.apk
+          ls -lh dist/
+          # Info ukuran & arsitektur
+          unzip -l dist/ProxyConverter.apk | grep -E 'lib/(armeabi|arm64)' | head -20 || true
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProxyConverter-APK
+          path: dist/ProxyConverter.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Create GitHub Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/ProxyConverter.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
