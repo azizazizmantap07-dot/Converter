@@ -1,0 +1,1724 @@
+{
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "local",
+        "tag": "dns-local"
+      },
+      {
+        "type": "https",
+        "tag": "dns-remote",
+        "server": "1.1.1.1",
+        "detour": "PILIH-PROXY"
+      },
+      {
+        "type": "https",
+        "tag": "dns-fallback",
+        "server": "8.8.8.8",
+        "detour": "PILIH-PROXY"
+      }
+    ],
+    "rules": [
+      {
+        "rule_set": [
+          "geosite-category-ads-all"
+        ],
+        "action": "reject"
+      },
+      {
+        "clash_mode": "Direct",
+        "server": "dns-local"
+      },
+      {
+        "clash_mode": "Global",
+        "server": "dns-remote"
+      },
+      {
+        "domain_suffix": [
+          "ntp.org",
+          "pool.ntp.org",
+          "time.android.com",
+          "time.windows.com",
+          "time.apple.com",
+          "time.cloudflare.com",
+          "connectivitycheck.gstatic.com",
+          "connectivitycheck.android.com",
+          "captive.apple.com",
+          "msftconnecttest.com",
+          "msftncsi.com",
+          "detectportal.firefox.com"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "domain_suffix": [
+          "klikbca.com",
+          "bca.co.id",
+          "blubybcadigital.id",
+          "bri.co.id",
+          "bankmandiri.co.id",
+          "bni.co.id",
+          "btn.co.id",
+          "cimbniaga.co.id",
+          "cimbclicks.co.id",
+          "permatabank.com",
+          "permatabank.co.id",
+          "danamon.co.id",
+          "ocbc.id",
+          "ocbcnisp.com",
+          "maybank.co.id",
+          "panin.co.id",
+          "bankbsi.co.id",
+          "bsi.co.id",
+          "jago.com",
+          "seabank.co.id",
+          "allobank.com",
+          "jenius.com",
+          "btpn.com",
+          "dana.id",
+          "ovo.id",
+          "gopay.co.id",
+          "linkaja.id",
+          "shopeepay.co.id",
+          "midtrans.com",
+          "xendit.co",
+          "doku.com",
+          "ipaymu.com",
+          "faspay.co.id",
+          "flip.id",
+          "kredivo.com",
+          "akulaku.com",
+          "homecredit.co.id",
+          "ojk.go.id",
+          "bi.go.id"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "domain_suffix": [
+          "tokopedia.com",
+          "tokopedia.net",
+          "tokopedia.link",
+          "shopee.co.id",
+          "shopee.com",
+          "shopeemobile.com",
+          "shp.ee",
+          "susercontent.com",
+          "lazada.co.id",
+          "lazada.com",
+          "lzd.co",
+          "bukalapak.com",
+          "blibli.com",
+          "tiket.com",
+          "traveloka.com",
+          "zalora.co.id",
+          "jd.id",
+          "olx.co.id",
+          "sociolla.com",
+          "orami.co.id",
+          "gojek.com",
+          "gojekapi.com",
+          "grab.com",
+          "grabtaxi.com",
+          "aliexpress.com",
+          "alicdn.com",
+          "temu.com",
+          "shein.com",
+          "ebay.com"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "domain_suffix": [
+          "vidio.com",
+          "mola.tv",
+          "rctiplus.com",
+          "rctiplus.id",
+          "wetv.vip",
+          "catchplay.com",
+          "genflix.co.id",
+          "visionplus.id",
+          "maxstream.tv"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "domain_keyword": [
+          "torrent",
+          "bittorrent",
+          "tracker"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "rule_set": [
+          "geosite-category-pt"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "domain_suffix": [
+          "claude.ai",
+          "anthropic.com",
+          "claude.com",
+          "perplexity.ai",
+          "gemini.google.com",
+          "aistudio.google.com",
+          "bard.google.com",
+          "generativelanguage.googleapis.com",
+          "notebooklm.google",
+          "copilot.microsoft.com",
+          "x.ai",
+          "grok.com",
+          "poe.com",
+          "huggingface.co",
+          "midjourney.com",
+          "civitai.com",
+          "character.ai",
+          "mistral.ai",
+          "cursor.sh",
+          "cursor.com",
+          "githubcopilot.com",
+          "openrouter.ai",
+          "groq.com",
+          "stability.ai",
+          "runwayml.com",
+          "elevenlabs.io",
+          "suno.com",
+          "you.com",
+          "jasper.ai"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-openai",
+          "geosite-category-ai-not-cn"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "domain_suffix": [
+          "t.me",
+          "telegram.org",
+          "telegram.me",
+          "tdesktop.com",
+          "telegra.ph",
+          "telesco.pe",
+          "cdn-telegram.org"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-telegram"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-whatsapp",
+          "geosite-signal",
+          "geosite-line",
+          "geosite-discord",
+          "geosite-zoom",
+          "geosite-slack"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-youtube"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-netflix"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "domain_suffix": [
+          "viu.com",
+          "iq.com",
+          "hotstar.com",
+          "crunchyroll.com",
+          "dazn.com",
+          "peacocktv.com",
+          "paramountplus.com",
+          "max.com",
+          "mubi.com",
+          "plex.tv",
+          "vimeo.com",
+          "dailymotion.com",
+          "bilibili.tv"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-disney",
+          "geosite-hbo",
+          "geosite-primevideo",
+          "geosite-hulu",
+          "geosite-twitch"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "domain_suffix": [
+          "joox.com",
+          "last.fm",
+          "bandcamp.com",
+          "audiomack.com"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-spotify",
+          "geosite-soundcloud",
+          "geosite-deezer",
+          "geosite-tidal"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-tiktok",
+          "geosite-facebook",
+          "geosite-instagram",
+          "geosite-twitter",
+          "geosite-reddit",
+          "geosite-pinterest",
+          "geosite-linkedin",
+          "geosite-category-social-media-not-cn"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "domain_suffix": [
+          "mobilelegends.com",
+          "moonton.com",
+          "garena.com",
+          "garena.co.id",
+          "freefiremobile.com",
+          "pubgmobile.com",
+          "proximabeta.com",
+          "igamecj.com",
+          "krafton.com",
+          "hoyoverse.com",
+          "mihoyo.com",
+          "supercell.com",
+          "supercellid.com",
+          "roblox.com",
+          "rbxcdn.com",
+          "minecraft.net",
+          "mojang.com",
+          "callofduty.com",
+          "activision.com"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-steam",
+          "geosite-epicgames",
+          "geosite-ea",
+          "geosite-ubisoft",
+          "geosite-blizzard",
+          "geosite-riot",
+          "geosite-xbox",
+          "geosite-playstation",
+          "geosite-nintendo",
+          "geosite-category-games"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "domain_suffix": [
+          "okx.com",
+          "bybit.com",
+          "kucoin.com",
+          "gate.io",
+          "coingecko.com",
+          "coinmarketcap.com",
+          "stripe.com",
+          "wise.com",
+          "payoneer.com",
+          "etherscan.io",
+          "metamask.io",
+          "uniswap.org",
+          "opensea.io"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-paypal",
+          "geosite-binance"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "domain_suffix": [
+          "npmjs.org",
+          "npmjs.com",
+          "pypi.org",
+          "pythonhosted.org",
+          "golang.org",
+          "go.dev",
+          "rust-lang.org",
+          "crates.io",
+          "maven.org",
+          "gradle.org",
+          "stackoverflow.com",
+          "sstatic.net",
+          "kotlinlang.org",
+          "flutter.dev",
+          "dart.dev",
+          "pub.dev",
+          "githubusercontent.com",
+          "githubassets.com"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "rule_set": [
+          "geosite-github",
+          "geosite-gitlab",
+          "geosite-docker",
+          "geosite-jetbrains"
+        ],
+        "server": "dns-remote"
+      },
+      {
+        "domain_suffix": [
+          "speedtest.net",
+          "ookla.com",
+          "fast.com",
+          "speed.cloudflare.com"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "rule_set": [
+          "geosite-speedtest"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "rule_set": [
+          "geosite-microsoft"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "rule_set": [
+          "geosite-apple"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "rule_set": [
+          "geosite-google"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "domain_suffix": [
+          "id",
+          "co.id",
+          "go.id",
+          "ac.id",
+          "or.id",
+          "sch.id",
+          "web.id",
+          "my.id",
+          "biz.id"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "rule_set": [
+          "geosite-cn"
+        ],
+        "server": "dns-local"
+      }
+    ],
+    "final": "dns-remote",
+    "strategy": "ipv4_only"
+  },
+  "ntp": {
+    "enabled": true,
+    "server": "time.cloudflare.com",
+    "server_port": 123,
+    "interval": "30m",
+    "domain_resolver": "dns-local"
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "address": [
+        "172.19.0.1/30"
+      ],
+      "auto_route": true,
+      "strict_route": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2080
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "PILIH-PROXY",
+      "outbounds": [
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT",
+        "==DAFTAR_SEMUA_TAG_PROXY=="
+      ],
+      "default": "AUTO-TERCEPAT"
+    },
+    {
+      "type": "urltest",
+      "tag": "AUTO-TERCEPAT",
+      "outbounds": [
+        "==DAFTAR_SEMUA_TAG_PROXY=="
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m",
+      "tolerance": 50
+    },
+    {
+      "type": "urltest",
+      "tag": "PROXY-FAILOVER",
+      "outbounds": [
+        "==DAFTAR_SEMUA_TAG_PROXY=="
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "2m",
+      "tolerance": 1000,
+      "idle_timeout": "30m"
+    },
+    {
+      "type": "urltest",
+      "tag": "PROXY-LOADBALANCE",
+      "outbounds": [
+        "==DAFTAR_SEMUA_TAG_PROXY=="
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "5m",
+      "tolerance": 300
+    },
+    {
+      "type": "selector",
+      "tag": "AI-CHATGPT",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "TELEGRAM",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "MESSENGER",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "TIKTOK-SOSMED",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "YOUTUBE",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "NETFLIX",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "STREAMING",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "STREAMING-LOKAL",
+      "outbounds": [
+        "PILIH-PROXY",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "MUSIC",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "GAME",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "CRYPTO-PAYMENT",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "DEVELOPER",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "GOOGLE",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "MICROSOFT",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "APPLE",
+      "outbounds": [
+        "PILIH-PROXY",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "SPEEDTEST",
+      "outbounds": [
+        "PILIH-PROXY",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "DOWNLOAD-TORRENT",
+      "outbounds": [
+        "PILIH-PROXY",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "FINANSIAL-BANK",
+      "outbounds": [
+        "PILIH-PROXY",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "E-COMMERCE",
+      "outbounds": [
+        "PILIH-PROXY",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "selector",
+      "tag": "LAINNYA",
+      "outbounds": [
+        "PILIH-PROXY",
+        "AUTO-TERCEPAT",
+        "PROXY-FAILOVER",
+        "PROXY-LOADBALANCE",
+        "DIRECT"
+      ],
+      "default": "PILIH-PROXY"
+    },
+    {
+      "type": "direct",
+      "tag": "DIRECT"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "protocol": "quic",
+        "action": "reject"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "DIRECT"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "PILIH-PROXY"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "DIRECT"
+      },
+      {
+        "rule_set": [
+          "geosite-category-ads-all"
+        ],
+        "action": "reject"
+      },
+      {
+        "protocol": "bittorrent",
+        "outbound": "DOWNLOAD-TORRENT"
+      },
+      {
+        "protocol": "ntp",
+        "outbound": "DIRECT"
+      },
+      {
+        "domain_suffix": [
+          "ntp.org",
+          "pool.ntp.org",
+          "time.android.com",
+          "time.windows.com",
+          "time.apple.com",
+          "time.cloudflare.com",
+          "connectivitycheck.gstatic.com",
+          "connectivitycheck.android.com",
+          "captive.apple.com",
+          "msftconnecttest.com",
+          "msftncsi.com",
+          "detectportal.firefox.com",
+          "lan",
+          "local",
+          "localhost"
+        ],
+        "outbound": "DIRECT"
+      },
+      {
+        "domain_suffix": [
+          "klikbca.com",
+          "bca.co.id",
+          "blubybcadigital.id",
+          "bri.co.id",
+          "bankmandiri.co.id",
+          "bni.co.id",
+          "btn.co.id",
+          "cimbniaga.co.id",
+          "cimbclicks.co.id",
+          "permatabank.com",
+          "permatabank.co.id",
+          "danamon.co.id",
+          "ocbc.id",
+          "ocbcnisp.com",
+          "maybank.co.id",
+          "panin.co.id",
+          "bankbsi.co.id",
+          "bsi.co.id",
+          "jago.com",
+          "seabank.co.id",
+          "allobank.com",
+          "jenius.com",
+          "btpn.com",
+          "dana.id",
+          "ovo.id",
+          "gopay.co.id",
+          "linkaja.id",
+          "shopeepay.co.id",
+          "midtrans.com",
+          "xendit.co",
+          "doku.com",
+          "ipaymu.com",
+          "faspay.co.id",
+          "flip.id",
+          "kredivo.com",
+          "akulaku.com",
+          "homecredit.co.id",
+          "ojk.go.id",
+          "bi.go.id"
+        ],
+        "outbound": "FINANSIAL-BANK"
+      },
+      {
+        "domain_suffix": [
+          "tokopedia.com",
+          "tokopedia.net",
+          "tokopedia.link",
+          "shopee.co.id",
+          "shopee.com",
+          "shopeemobile.com",
+          "shp.ee",
+          "susercontent.com",
+          "lazada.co.id",
+          "lazada.com",
+          "lzd.co",
+          "bukalapak.com",
+          "blibli.com",
+          "tiket.com",
+          "traveloka.com",
+          "zalora.co.id",
+          "jd.id",
+          "olx.co.id",
+          "sociolla.com",
+          "orami.co.id",
+          "gojek.com",
+          "gojekapi.com",
+          "grab.com",
+          "grabtaxi.com",
+          "aliexpress.com",
+          "alicdn.com",
+          "temu.com",
+          "shein.com",
+          "ebay.com"
+        ],
+        "outbound": "E-COMMERCE"
+      },
+      {
+        "domain_suffix": [
+          "vidio.com",
+          "mola.tv",
+          "rctiplus.com",
+          "rctiplus.id",
+          "wetv.vip",
+          "catchplay.com",
+          "genflix.co.id",
+          "visionplus.id",
+          "maxstream.tv"
+        ],
+        "outbound": "STREAMING-LOKAL"
+      },
+      {
+        "domain_keyword": [
+          "torrent",
+          "bittorrent",
+          "tracker"
+        ],
+        "outbound": "DOWNLOAD-TORRENT"
+      },
+      {
+        "rule_set": [
+          "geosite-category-pt"
+        ],
+        "outbound": "DOWNLOAD-TORRENT"
+      },
+      {
+        "domain_suffix": [
+          "claude.ai",
+          "anthropic.com",
+          "claude.com",
+          "perplexity.ai",
+          "gemini.google.com",
+          "aistudio.google.com",
+          "bard.google.com",
+          "generativelanguage.googleapis.com",
+          "notebooklm.google",
+          "copilot.microsoft.com",
+          "x.ai",
+          "grok.com",
+          "poe.com",
+          "huggingface.co",
+          "midjourney.com",
+          "civitai.com",
+          "character.ai",
+          "mistral.ai",
+          "cursor.sh",
+          "cursor.com",
+          "githubcopilot.com",
+          "openrouter.ai",
+          "groq.com",
+          "stability.ai",
+          "runwayml.com",
+          "elevenlabs.io",
+          "suno.com",
+          "you.com",
+          "jasper.ai"
+        ],
+        "outbound": "AI-CHATGPT"
+      },
+      {
+        "rule_set": [
+          "geosite-openai",
+          "geosite-category-ai-not-cn"
+        ],
+        "outbound": "AI-CHATGPT"
+      },
+      {
+        "domain_suffix": [
+          "t.me",
+          "telegram.org",
+          "telegram.me",
+          "tdesktop.com",
+          "telegra.ph",
+          "telesco.pe",
+          "cdn-telegram.org"
+        ],
+        "outbound": "TELEGRAM"
+      },
+      {
+        "rule_set": [
+          "geosite-telegram"
+        ],
+        "outbound": "TELEGRAM"
+      },
+      {
+        "rule_set": [
+          "geosite-whatsapp",
+          "geosite-signal",
+          "geosite-line",
+          "geosite-discord",
+          "geosite-zoom",
+          "geosite-slack"
+        ],
+        "outbound": "MESSENGER"
+      },
+      {
+        "rule_set": [
+          "geosite-youtube"
+        ],
+        "outbound": "YOUTUBE"
+      },
+      {
+        "rule_set": [
+          "geosite-netflix"
+        ],
+        "outbound": "NETFLIX"
+      },
+      {
+        "domain_suffix": [
+          "viu.com",
+          "iq.com",
+          "hotstar.com",
+          "crunchyroll.com",
+          "dazn.com",
+          "peacocktv.com",
+          "paramountplus.com",
+          "max.com",
+          "mubi.com",
+          "plex.tv",
+          "vimeo.com",
+          "dailymotion.com",
+          "bilibili.tv"
+        ],
+        "outbound": "STREAMING"
+      },
+      {
+        "rule_set": [
+          "geosite-disney",
+          "geosite-hbo",
+          "geosite-primevideo",
+          "geosite-hulu",
+          "geosite-twitch"
+        ],
+        "outbound": "STREAMING"
+      },
+      {
+        "domain_suffix": [
+          "joox.com",
+          "last.fm",
+          "bandcamp.com",
+          "audiomack.com"
+        ],
+        "outbound": "MUSIC"
+      },
+      {
+        "rule_set": [
+          "geosite-spotify",
+          "geosite-soundcloud",
+          "geosite-deezer",
+          "geosite-tidal"
+        ],
+        "outbound": "MUSIC"
+      },
+      {
+        "rule_set": [
+          "geosite-tiktok",
+          "geosite-facebook",
+          "geosite-instagram",
+          "geosite-twitter",
+          "geosite-reddit",
+          "geosite-pinterest",
+          "geosite-linkedin",
+          "geosite-category-social-media-not-cn"
+        ],
+        "outbound": "TIKTOK-SOSMED"
+      },
+      {
+        "domain_suffix": [
+          "mobilelegends.com",
+          "moonton.com",
+          "garena.com",
+          "garena.co.id",
+          "freefiremobile.com",
+          "pubgmobile.com",
+          "proximabeta.com",
+          "igamecj.com",
+          "krafton.com",
+          "hoyoverse.com",
+          "mihoyo.com",
+          "supercell.com",
+          "supercellid.com",
+          "roblox.com",
+          "rbxcdn.com",
+          "minecraft.net",
+          "mojang.com",
+          "callofduty.com",
+          "activision.com"
+        ],
+        "outbound": "GAME"
+      },
+      {
+        "rule_set": [
+          "geosite-steam",
+          "geosite-epicgames",
+          "geosite-ea",
+          "geosite-ubisoft",
+          "geosite-blizzard",
+          "geosite-riot",
+          "geosite-xbox",
+          "geosite-playstation",
+          "geosite-nintendo",
+          "geosite-category-games"
+        ],
+        "outbound": "GAME"
+      },
+      {
+        "domain_suffix": [
+          "okx.com",
+          "bybit.com",
+          "kucoin.com",
+          "gate.io",
+          "coingecko.com",
+          "coinmarketcap.com",
+          "stripe.com",
+          "wise.com",
+          "payoneer.com",
+          "etherscan.io",
+          "metamask.io",
+          "uniswap.org",
+          "opensea.io"
+        ],
+        "outbound": "CRYPTO-PAYMENT"
+      },
+      {
+        "rule_set": [
+          "geosite-paypal",
+          "geosite-binance"
+        ],
+        "outbound": "CRYPTO-PAYMENT"
+      },
+      {
+        "domain_suffix": [
+          "npmjs.org",
+          "npmjs.com",
+          "pypi.org",
+          "pythonhosted.org",
+          "golang.org",
+          "go.dev",
+          "rust-lang.org",
+          "crates.io",
+          "maven.org",
+          "gradle.org",
+          "stackoverflow.com",
+          "sstatic.net",
+          "kotlinlang.org",
+          "flutter.dev",
+          "dart.dev",
+          "pub.dev",
+          "githubusercontent.com",
+          "githubassets.com"
+        ],
+        "outbound": "DEVELOPER"
+      },
+      {
+        "rule_set": [
+          "geosite-github",
+          "geosite-gitlab",
+          "geosite-docker",
+          "geosite-jetbrains"
+        ],
+        "outbound": "DEVELOPER"
+      },
+      {
+        "domain_suffix": [
+          "speedtest.net",
+          "ookla.com",
+          "fast.com",
+          "speed.cloudflare.com"
+        ],
+        "outbound": "SPEEDTEST"
+      },
+      {
+        "rule_set": [
+          "geosite-speedtest"
+        ],
+        "outbound": "SPEEDTEST"
+      },
+      {
+        "rule_set": [
+          "geosite-microsoft"
+        ],
+        "outbound": "MICROSOFT"
+      },
+      {
+        "rule_set": [
+          "geosite-apple"
+        ],
+        "outbound": "APPLE"
+      },
+      {
+        "rule_set": [
+          "geosite-google"
+        ],
+        "outbound": "GOOGLE"
+      },
+      {
+        "domain_suffix": [
+          "id",
+          "co.id",
+          "go.id",
+          "ac.id",
+          "or.id",
+          "sch.id",
+          "web.id",
+          "my.id",
+          "biz.id"
+        ],
+        "outbound": "FINANSIAL-BANK"
+      },
+      {
+        "rule_set": [
+          "geosite-cn"
+        ],
+        "outbound": "DIRECT"
+      },
+      {
+        "rule_set": [
+          "geoip-telegram"
+        ],
+        "outbound": "TELEGRAM"
+      },
+      {
+        "rule_set": [
+          "geoip-netflix"
+        ],
+        "outbound": "NETFLIX"
+      },
+      {
+        "rule_set": [
+          "geoip-facebook",
+          "geoip-twitter"
+        ],
+        "outbound": "TIKTOK-SOSMED"
+      },
+      {
+        "rule_set": [
+          "geoip-google"
+        ],
+        "outbound": "GOOGLE"
+      },
+      {
+        "rule_set": [
+          "geoip-id",
+          "geoip-cn"
+        ],
+        "outbound": "DIRECT"
+      }
+    ],
+    "rule_set": [
+      {
+        "tag": "geosite-category-ads-all",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-category-pt",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-pt.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-openai",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/openai.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-category-ai-not-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ai-%21cn.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-telegram",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/telegram.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-whatsapp",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/whatsapp.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-signal",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/signal.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-line",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/line.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-discord",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/discord.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-zoom",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/zoom.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-slack",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/slack.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-youtube",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/youtube.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-netflix",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/netflix.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-disney",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/disney.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-hbo",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/hbo.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-primevideo",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/primevideo.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-hulu",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/hulu.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-twitch",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/twitch.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-spotify",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/spotify.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-soundcloud",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/soundcloud.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-deezer",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/deezer.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-tidal",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/tidal.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-tiktok",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/tiktok.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-facebook",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/facebook.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-instagram",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/instagram.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-twitter",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/twitter.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-reddit",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/reddit.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-pinterest",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/pinterest.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-linkedin",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/linkedin.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-category-social-media-not-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-social-media-%21cn.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-steam",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/steam.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-epicgames",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/epicgames.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-ea",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/ea.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-ubisoft",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/ubisoft.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-blizzard",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/blizzard.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-riot",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/riot.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-xbox",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/xbox.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-playstation",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/playstation.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-nintendo",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/nintendo.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-category-games",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-games.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-paypal",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/paypal.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-binance",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/binance.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-github",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/github.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-gitlab",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/gitlab.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-docker",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/docker.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-jetbrains",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/jetbrains.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-speedtest",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/speedtest.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-microsoft",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/microsoft.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-apple",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/apple.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geosite-google",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/google.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geoip-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geoip-id",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/id.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geoip-telegram",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/telegram.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geoip-netflix",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/netflix.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geoip-facebook",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/facebook.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geoip-twitter",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/twitter.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      },
+      {
+        "tag": "geoip-google",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/google.srs",
+        "update_interval": "1d",
+        "http_client": "default-http"
+      }
+    ],
+    "final": "PILIH-PROXY",
+    "auto_detect_interface": true,
+    "default_domain_resolver": "dns-local",
+    "default_http_client": "default-http"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "default_mode": "Rule"
+    }
+  },
+  "http_clients": [
+    {
+      "tag": "default-http",
+      "detour": "PILIH-PROXY"
+    }
+  ]
+}
